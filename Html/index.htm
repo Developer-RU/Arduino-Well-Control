@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <title>Панель управления</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy this line! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+	
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Year', 'Sales', 'Expenses'],
+          ['2013',  1000,      400],
+          ['2014',  1170,      460],
+          ['2015',  660,       1120],
+          ['2016',  1030,      540]
+        ]);
+
+        var options = {
+          title: 'Company Performance',
+          hAxis: {title: 'Year',  titleTextStyle: {color: '#333'}},
+          vAxis: {minValue: 0}
+        };
+
+        var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
+    </script>
+	
+	<script>
+		function GetState() 
+		{
+			nocache = "&nocache=" + Math.random() * 1000000;
+			var request = new XMLHttpRequest();
+			request.onreadystatechange = function()
+			{
+				if (this.readyState == 4)
+				{
+					if (this.status == 200) 
+					{
+						if (this.responseText != null && this.responseText != "0:0:0:0:0:0:0:0:0:0:0:0") 
+						{
+							var arrayOfStrings = this.responseText.split(":");
+
+							document.getElementById("tempiraturePipe").innerHTML = arrayOfStrings[0];
+							document.getElementById("tempiratureWater").innerHTML = arrayOfStrings[1];
+							document.getElementById("pressureWater").innerHTML = arrayOfStrings[2];
+							
+							if(arrayOfStrings[3] == 0) 
+							{
+								document.getElementById("relayPump").innerHTML = "Выкл";
+							}
+							else
+							{
+								document.getElementById("relayPump").innerHTML = "Вкл";
+							}
+							
+							if(arrayOfStrings[4] == 0) 
+							{
+								document.getElementById("relayHeating").innerHTML = "Выкл";
+							}
+							else
+							{
+								document.getElementById("relayHeating").innerHTML = "Вкл";
+							}
+							
+							if(arrayOfStrings[5] == 11) 
+							{
+								document.getElementById("isWater").innerHTML = "Есть";
+							}
+							else
+							{
+								document.getElementById("isWater").innerHTML = "Нет";
+							}
+							
+							if(arrayOfStrings[6] == 1) 
+							{
+								document.getElementById("manualModePump").innerHTML = "Авто";
+								document.getElementById("manualModePump").setAttribute("class","btn btn-success");
+							}
+							else
+							{
+								document.getElementById("manualModePump").innerHTML = "Ручное";
+								document.getElementById("manualModePump").setAttribute("class","btn btn-primary");
+							}
+							
+							if(arrayOfStrings[7] == 1) 
+							{
+								document.getElementById("manualModePipe").innerHTML = "Авто";
+								document.getElementById("manualModePipe").setAttribute("class","btn btn-success");
+							}
+							else
+							{
+								document.getElementById("manualModePipe").innerHTML = "Ручное";		
+								document.getElementById("manualModePipe").setAttribute("class","btn btn-primary");
+							}
+							
+							
+							document.getElementById("minTemperature").innerHTML = arrayOfStrings[8];
+							document.getElementById("maxTemperature").innerHTML = arrayOfStrings[9];
+							
+							document.getElementById("minPressure").innerHTML = arrayOfStrings[10];
+							document.getElementById("maxPressure").innerHTML = arrayOfStrings[11];
+						}
+					}
+				}
+			}
+			
+			request.open("GET", "ajax_flame" + nocache, true);
+			request.send(null);
+			setTimeout('GetState()', 5000);
+		}
+		
+		function onClick(num)
+		{
+			var request = new XMLHttpRequest();
+			request.open("GET", "\command?M=" + num, false);
+			request.send(null);
+		}
+	</script>
+	
+    <link href="my.css" rel="stylesheet">
+
+</head>
+
+<body onload="GetState()" style="background: rgba(51, 183, 178, 0.33);">
+
+    <!-- Static navbar -->
+    <div class="navbar navbar-default navbar-static-top" role="navigation" style="background-color: rgba(51, 183, 181, 0.55); border-color: #31708f;">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#">Ардуино сервер</a>
+			</div>
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav">
+					<li class="active"><a href="index.htm">Главная</a></li>
+					<li><a href="details.htm">Статистика</a></li>
+					<li><a href="settings.htm">Настроки</a></li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li class="active"><a href="./">#000</a></li>
+					<li><a href="/">#FFF</a></li>
+				</ul>
+			</div>
+		</div>
+    </div>
+
+    <div class="container">
+		<div class="row">
+						
+			<div class="col-md-9">
+				<div class="jumbotron" style="background: #fff; margin: 10; padding: 10;">
+					<div id="chart_div" style="width: 700px; height: 200px;"></div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6 col-md-4 col-sm-12">
+						<div class="panel panel-default" style="border-radius: 0;">
+							<div class="panel-heading" style="font-size:20px;"><span class="glyphicon glyphicon-magnet"></span>  Темпиратура трубы</div>
+							<div class="panel-body">
+								<p id="tempiraturePipe" style="font-size:48px; color: green; text-align: center;" >--</p>
+							</div>
+							<div class="panel-footer">
+								<div class="row">
+									<div class="col-xs-6 col-md-6 col-sm-6">
+										<p>Мин. <span class="badge" id="minTemperature">--</span></p>
+									</div>
+									<div class="col-xs-6 col-md-6 col-sm-6">
+										<p>Макс. <span class="badge" id="maxTemperature">--</span></p>
+									</div>
+								</div>	
+							</div>
+						</div>						
+					</div>
+					
+					<div class="col-xs-6 col-md-4 col-sm-12">
+						<div class="panel panel-default" style="border-radius: 0;">
+							<div class="panel-heading" style="font-size:20px;"><span class="glyphicon glyphicon-tint"></span>  Темпиратура воды</div>
+							<div class="panel-body">
+								<p id="tempiratureWater" style="font-size:48px; color: green; text-align: center;" >--</p>
+							</div>
+							<div class="panel-footer">
+								<div class="row">
+									<div class="col-xs-6 col-md-6 col-sm-6">
+										<p>Мин. <span class="badge">--</span></p>
+									</div>
+									<div class="col-xs-6 col-md-6 col-sm-6">
+										<p>Макс. <span class="badge">--</span></p>
+									</div>
+								</div>	
+							</div>
+						</div>	
+					</div>
+					<div class="col-xs-6 col-md-4 col-sm-12">
+						<div class="panel panel-default" style="border-radius: 0;">
+							<div class="panel-heading" style="font-size:20px;"><span class="glyphicon glyphicon-dashboard"></span>  Давление воды</div>
+							
+							<div class="panel-body">
+								<p id="pressureWater" style="font-size:48px; color: green; text-align: center;" >--</p>
+							</div>
+							<div class="panel-footer">
+								<div class="row">
+									<div class="col-xs-6 col-md-6 col-sm-6">
+										<p>Мин. <span class="badge" id="minPressure">--</span></p>
+									</div>
+									<div class="col-xs-6 col-md-6 col-sm-6">
+										<p>Макс. <span class="badge" id="maxPressure">--</span></p>
+									</div>
+								</div>	
+							</div>
+						</div>	
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="col-xs-6 col-md-4 col-sm-12">
+						<div class="thumbnail text-center" style="height: 200px;" style="border-radius: 0;">
+							<h2 style="font-size:22px;" >Реле насоса</h2>
+							<hr />
+							<p id="relayPump" style="font-size:20px; color: green;" >--</p>
+							<p></p>
+							<p></p><p></p>
+							<p></p><p></p>
+							<p></p><p></p>
+							<p></p>
+						</div>
+					</div>
+					<div class="col-xs-6 col-md-4 col-sm-12">
+						<div class="thumbnail text-center" style="height: 200px;" style="border-radius: 0;">
+							<h2 style="font-size:22px;" >Реле тена</h2>
+							<hr />
+							<p id="relayHeating" style="font-size:20px; color: red;" >--</p>
+							<p></p>
+							<p></p><p></p>
+							<p></p><p></p>
+							<p></p><p></p>
+							<p></p>
+						</div>
+					</div>
+					<div class="col-xs-6 col-md-4 col-sm-12">
+						<div class="thumbnail text-center" style="height: 200px;" style="border-radius: 0;">
+							<h2 style="font-size:22px;" >Наличие воды</h2>
+							<hr />
+							<p id="isWater" style="font-size:20px; color: green;" >--</p>
+							<p></p>
+							<p></p><p></p>
+							<p></p><p></p>
+							<p></p><p></p>
+							<p></p>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="col-md-3">
+				
+				
+				<div class="panel panel-default" style="border-radius: 0;">
+					<div class="panel-heading" style="font-size: 20px;">Режимы работы</div>
+					
+					<div class="panel-body">
+							
+						<div class="row"> 
+							<div class="col-md-6">
+								<button type="button" class="btn btn-danger">Режим насоса</button>
+							</div>	
+							<div class="col-md-6">
+								<div class="btn-group">
+									<button type="button" onClick="onClick(1)"  id="manualModePump" class="btn btn-danger">Авто</button>
+									<button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
+										<span class="caret"></span>
+										<span class="sr-only">Меню с переключением</span>
+									</button>
+									<ul class="dropdown-menu" role="menu">
+										<li><a onClick="onClick(1)"  href="#">Включить</a></li>
+										<li><a onClick="onClick(1)"  href="#">Выключить</a></li>
+									</ul>
+								</div>
+							</div>	
+						</div>
+						
+						<hr/>
+						
+						<div class="row"> 
+							<div class="col-md-6">
+								<button type="button" class="btn btn-danger">Нагрев трубы</button>
+							</div>	
+							<div class="col-md-6">
+								<div class="btn-group">
+									<button type="button" onClick="onClick(2)" id="manualModePipe" class="btn btn-danger">Авто</button>
+									<button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
+										<span class="caret"></span>
+										<span class="sr-only">Меню с переключением</span>
+									</button>
+									<ul class="dropdown-menu" role="menu">
+										<li><a onClick="onClick(2)"  href="#">Включить</a></li>
+										<li><a onClick="onClick(2)"  href="#">Выключить</a></li>
+									</ul>
+								</div>
+							</div>	
+						</div>
+						
+						
+					</div>
+					
+				</div>
+				
+				<div class="panel panel-default" style="border-radius: 0;">
+					<div class="panel-heading" style="font-size: 20px;">Оповещения и ошибки</div>
+					
+						<div class="panel-body">
+												
+							<div class="bs-callout bs-callout-danger">
+								<div class="alert alert-success">Оповещение 001</div>
+							</div>
+						
+						</div>
+					
+				</div>
+				
+				
+			</div>
+			
+		</div>
+	</div>
+	
+	
+	<!-- Static navbar -->
+    <div class="navbar navbar-default navbar-static-bottom" role="navigation" style="background-color: rgba(51, 183, 181, 0.55); border-color: #31708f; margin-bottom: 0; border-radius: 0;">
+		<div class="container">
+			
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav">
+					<li class="active"><a href="index.htm">Главная</a></li>
+					<li><a href="details.htm">Статистика</a></li>
+					<li><a href="settings.htm">Настроки</a></li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li class="active"><a href="./">#000</a></li>
+					<li><a href="/">#FFF</a></li>
+				</ul>
+			</div>
+		</div>
+    </div>
+	
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	
+  </body>
+</html>

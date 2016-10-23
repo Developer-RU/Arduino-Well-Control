@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
+
+    <title>Панель управления</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy this line! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+	
+	<script>
+		function GetState() 
+		{
+			nocache = "&nocache=" + Math.random() * 1000000;
+			var request = new XMLHttpRequest();
+			request.onreadystatechange = function()
+			{
+				if (this.readyState == 4)
+				{
+					if (this.status == 200) 
+					{
+						if (this.responseText != null) 
+						{
+							var arrayOfStrings = this.responseText.split(":");
+
+							document.getElementById("tempiraturePipe").innerHTML = arrayOfStrings[0];
+							document.getElementById("tempiratureWater").innerHTML = arrayOfStrings[1];
+							document.getElementById("pressureWater").innerHTML = arrayOfStrings[2];
+							document.getElementById("relayPump").innerHTML = arrayOfStrings[3];
+							document.getElementById("relayHeating").innerHTML = arrayOfStrings[4];
+							document.getElementById("isWater").innerHTML = arrayOfStrings[5];
+							
+							for(var i = 1 ; i < 3 ; i++)
+							if(arrayOfStrings[2+i] == "1")
+								document.getElementById("btn_"+i).setAttribute("class","success");
+							else
+								document.getElementById("btn_"+i).setAttribute("class","default");
+								
+						}
+					}
+				}
+			}
+			
+			request.open("GET", "ajax_flame" + nocache, true);
+			request.send(null);
+			setTimeout('GetState()', 1000);
+		}
+		
+		function onClick(pin)
+		{
+			var request = new XMLHttpRequest();
+			request.open("GET", "\setpin?pin=" + pin, false);
+			request.send(null);
+		}
+	</script>
+
+	<style>
+		.panel-body {
+			padding: 15px;
+			background: #3e3e3e;
+		}
+		.panel-default>.panel-heading {
+			color: #333;
+			background-color: #424040;
+			border-color: #8e8e8e;
+			color: white;
+		}
+		.thumbnail {
+			display: block;
+			padding: 4px;
+			margin-bottom: 20px;
+			line-height: 1.42857143;
+			background-color: #b7b7b7;
+			border: 1px solid #ddd;
+			border-radius: 4px;
+			-webkit-transition: border .2s ease-in-out;
+			-o-transition: border .2s ease-in-out;
+			transition: border .2s ease-in-out;
+		}
+	</style>
+</head>
+
+<body onload="GetState()" style="background: #3d3e3e;">
+
+    <!-- Static navbar -->
+    <div class="navbar navbar-inverse navbar-static-top" role="navigation">
+		<div class="container">
+			<!--div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#">Ардуино сервер</a>
+			</div-->
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav">
+					<li class="active"><a href="/">Главная</a></li>
+					<li><a href="/">Статистика</a></li>
+					<li><a href="/">Настроки</a></li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li class="active"><a href="./">#000</a></li>
+					<li><a href="/">#FFF</a></li>
+				</ul>
+			</div>
+		</div>
+    </div>
+
+    <div class="container">
+		<div class="row">
+			<div class="col-md-4">
+				<div class="panel panel-default">
+					<div class="panel-heading" style="font-size: 20px;">Оповещения и ошибки</div>
+					
+						<div class="panel-body">
+												
+						<div class="bs-callout bs-callout-danger">
+							<div class="alert alert-success">Оповещение 05</div>
+						</div>	
+						<div class="bs-callout bs-callout-danger">
+							<div class="alert alert-success">Оповещение 05</div>
+						</div>	
+						<div class="bs-callout bs-callout-danger">
+							<div class="alert alert-success">Оповещение 05</div>
+						</div>							
+						<div class="bs-callout bs-callout-danger">
+							<div class="alert alert-success">Оповещение 04</div>
+						</div>	
+						<div class="bs-callout bs-callout-danger">
+							<div class="alert alert-success">Оповещение 03</div>
+						</div>	
+						<div class="bs-callout bs-callout-danger">
+							<div class="alert alert-success">Оповещение 02</div>
+						</div>	
+						<div class="bs-callout bs-callout-danger">
+							<div class="alert alert-success">Оповещение 01</div>
+						</div>
+					
+					</div>
+				</div>
+			</div>
+			
+			<div class="col-md-8">
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-xs-6 col-md-4"> 
+								<a href="/"id="btn_1"  class="btn btn-default" >Автоматический режим насоса</a>
+							</div>
+							<div class="col-xs-6 col-md-4"> 
+								<a href="/"id="btn_2"  class="btn btn-default" >Автоматический режим подогрева</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<hr />
+				
+				<div class="row">
+					<div class="col-xs-6 col-md-4">
+						<div class="thumbnail text-center" style="height: 200px;">
+							<h2 style="font-size:22px;" >Темпиратура трубы</h2>
+							<hr />
+							<p id="tempiraturePipe" style="font-size:48px; color: green;" >14</p>
+							<p></p>
+							<p></p><p></p>
+							<p></p><p></p>
+							<p></p><p></p>
+							<p></p>
+						</div>
+					</div>
+					<div class="col-xs-6 col-md-4">
+						<div class="thumbnail text-center" style="height: 200px;">
+							<h2 style="font-size:22px;" >Темпиратура воды</h2>
+							<hr />
+							<p id="tempiratureWater" style="font-size:48px; color: green;" >12</p>
+							<p></p>
+							<p></p><p></p>
+							<p></p><p></p>
+							<p></p><p></p>
+							<p></p>
+						</div>
+					</div>
+					<div class="col-xs-6 col-md-4">
+						<div class="thumbnail text-center" style="height: 200px;">
+							<h2 style="font-size:22px;" >Давление воды</h2>
+							<hr />
+							<p id="pressureWater" style="font-size:48px; color: green;" >4</p>
+							<p></p>
+							<p></p><p></p>
+							<p></p><p></p>
+							<p></p><p></p>
+							<p></p>
+						</div>
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="col-xs-6 col-md-4">
+						<div class="thumbnail text-center" style="height: 200px;">
+							<h2 style="font-size:22px;" >Реле насоса</h2>
+							<hr />
+							<p id="relayPump" style="font-size:48px; color: green;" >ON</p>
+							<p></p>
+							<p></p><p></p>
+							<p></p><p></p>
+							<p></p><p></p>
+							<p></p>
+						</div>
+					</div>
+					<div class="col-xs-6 col-md-4">
+						<div class="thumbnail text-center" style="height: 200px;">
+							<h2 style="font-size:22px;" >Реле тена</h2>
+							<hr />
+							<p id="relayHeating" style="font-size:48px; color: red;" >OFF</p>
+							<p></p>
+							<p></p><p></p>
+							<p></p><p></p>
+							<p></p><p></p>
+							<p></p>
+						</div>
+					</div>
+					<div class="col-xs-6 col-md-4">
+						<div class="thumbnail text-center" style="height: 200px;">
+							<h2 style="font-size:22px;" >Наличие воды</h2>
+							<hr />
+							<p id="isWater" style="font-size:48px; color: green;" >YES</p>
+							<p></p>
+							<p></p><p></p>
+							<p></p><p></p>
+							<p></p><p></p>
+							<p></p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+    <div class="navbar navbar-inverse navbar-static-bottom" style="position: fixed; bottom: 0; width: 100%; margin-bottom: 0; border-radius: 0;">
+		<div class="container">
+			<a href="/" style="color:#fff;">IP: <b>192.168.100.100</b></a>
+		</div>
+    </div>
+	
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	
+  </body>
+</html>

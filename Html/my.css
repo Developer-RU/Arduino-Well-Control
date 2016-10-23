@@ -1,0 +1,47 @@
+.form {
+  width: 400px;
+  height: 270px;
+  border: 3px solid rgb(0, 117, 178);
+  background: rgb(6, 144, 207);
+  color: #fff;
+}
+
+td{color: #fff}
+
+h2 {
+  font-family: Arial;
+  font-weight: normal;
+  margin: 20px;
+  text-align: center
+}
+
+.button_disabled {color: #fff; /* цвет текста */
+  background: rgb(212, 75, 56);/* фон кнопки */
+  border: none; /* не показывать границу */
+  border-radius:5px; /* закругление углов */
+  cursor: pointer /* ставим другой курсор */
+  }
+
+.button_disabled:hover {background: rgb(232, 95, 76);}/* при наведении курсора мышки */
+.button_disabled:active {background: rgb(152, 15, 0);}/* при нажатии */
+
+.button_enabled {color: #000; /* цвет текста */
+  background: rgb(17,237,105); /* фон кнопки */
+  border: none; /* не показывать границу */
+  border-radius:5px; /* закругление углов */
+  cursor: pointer /* ставим другой курсор */
+  }
+
+.button_enabled:hover { background: rgb(94,242,153); } /* при наведении курсора мышки */
+.button_enabled:active { background: rgb(84,184,124); } /* при нажатии */
+
+
+.panel-footer {
+    padding: 10px 15px;
+    background-color: rgba(51, 183, 181, 0.55);
+}
+
+.panel-default>.panel-heading {
+    color: #333;
+    background-color: rgba(204, 204, 204, 0);
+}
